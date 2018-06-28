@@ -13,11 +13,12 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,14 +27,10 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
-    QLabel *label;
-    QTextEdit *textEdit;
-    QTextEdit *textEdit_2;
-    QLabel *label_2;
-    QWidget *layoutWidget;
-    QFormLayout *formLayout;
+    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout_2;
+    QGridLayout *gridLayout;
     QPushButton *openButton;
-    QPushButton *pushButton;
     QLabel *label_3;
     QComboBox *PortBox;
     QLabel *label_4;
@@ -46,64 +43,51 @@ public:
     QComboBox *StopBox;
     QPushButton *clearButton;
     QPushButton *sendButton;
-    QWidget *widget;
-    QFormLayout *formLayout_2;
-    QRadioButton *radioButton;
-    QRadioButton *radioButton_2;
+    QGridLayout *gridLayout_3;
+    QLabel *label;
+    QTextEdit *textEdit;
+    QFormLayout *formLayout;
+    QLabel *label_2;
+    QTextEdit *textEdit_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(514, 321);
+        MainWindow->resize(425, 313);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(141, 11, 48, 16));
-        textEdit = new QTextEdit(centralWidget);
-        textEdit->setObjectName(QStringLiteral("textEdit"));
-        textEdit->setGeometry(QRect(141, 29, 256, 161));
-        textEdit_2 = new QTextEdit(centralWidget);
-        textEdit_2->setObjectName(QStringLiteral("textEdit_2"));
-        textEdit_2->setGeometry(QRect(140, 220, 256, 31));
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(140, 200, 48, 16));
-        layoutWidget = new QWidget(centralWidget);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 10, 125, 242));
-        formLayout = new QFormLayout(layoutWidget);
-        formLayout->setSpacing(6);
-        formLayout->setContentsMargins(11, 11, 11, 11);
-        formLayout->setObjectName(QStringLiteral("formLayout"));
-        formLayout->setContentsMargins(0, 0, 0, 0);
-        openButton = new QPushButton(layoutWidget);
+        verticalLayout = new QVBoxLayout(centralWidget);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout = new QGridLayout();
+        gridLayout->setSpacing(6);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        openButton = new QPushButton(centralWidget);
         openButton->setObjectName(QStringLiteral("openButton"));
 
-        formLayout->setWidget(0, QFormLayout::SpanningRole, openButton);
+        gridLayout->addWidget(openButton, 0, 0, 1, 2);
 
-        pushButton = new QPushButton(layoutWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-
-        formLayout->setWidget(1, QFormLayout::SpanningRole, pushButton);
-
-        label_3 = new QLabel(layoutWidget);
+        label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QStringLiteral("label_3"));
 
-        formLayout->setWidget(2, QFormLayout::LabelRole, label_3);
+        gridLayout->addWidget(label_3, 1, 0, 1, 1);
 
-        PortBox = new QComboBox(layoutWidget);
+        PortBox = new QComboBox(centralWidget);
         PortBox->setObjectName(QStringLiteral("PortBox"));
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, PortBox);
+        gridLayout->addWidget(PortBox, 1, 1, 1, 1);
 
-        label_4 = new QLabel(layoutWidget);
+        label_4 = new QLabel(centralWidget);
         label_4->setObjectName(QStringLiteral("label_4"));
 
-        formLayout->setWidget(3, QFormLayout::LabelRole, label_4);
+        gridLayout->addWidget(label_4, 2, 0, 1, 1);
 
-        BaudBox = new QComboBox(layoutWidget);
+        BaudBox = new QComboBox(centralWidget);
         BaudBox->addItem(QString());
         BaudBox->addItem(QString());
         BaudBox->addItem(QString());
@@ -111,69 +95,89 @@ public:
         BaudBox->addItem(QString());
         BaudBox->setObjectName(QStringLiteral("BaudBox"));
 
-        formLayout->setWidget(3, QFormLayout::FieldRole, BaudBox);
+        gridLayout->addWidget(BaudBox, 2, 1, 1, 1);
 
-        label_5 = new QLabel(layoutWidget);
+        label_5 = new QLabel(centralWidget);
         label_5->setObjectName(QStringLiteral("label_5"));
 
-        formLayout->setWidget(4, QFormLayout::LabelRole, label_5);
+        gridLayout->addWidget(label_5, 3, 0, 1, 1);
 
-        BitNumBox = new QComboBox(layoutWidget);
+        BitNumBox = new QComboBox(centralWidget);
         BitNumBox->addItem(QString());
         BitNumBox->setObjectName(QStringLiteral("BitNumBox"));
 
-        formLayout->setWidget(4, QFormLayout::FieldRole, BitNumBox);
+        gridLayout->addWidget(BitNumBox, 3, 1, 1, 1);
 
-        label_6 = new QLabel(layoutWidget);
+        label_6 = new QLabel(centralWidget);
         label_6->setObjectName(QStringLiteral("label_6"));
 
-        formLayout->setWidget(5, QFormLayout::LabelRole, label_6);
+        gridLayout->addWidget(label_6, 4, 0, 1, 1);
 
-        ParityBox = new QComboBox(layoutWidget);
+        ParityBox = new QComboBox(centralWidget);
         ParityBox->addItem(QString());
         ParityBox->setObjectName(QStringLiteral("ParityBox"));
 
-        formLayout->setWidget(5, QFormLayout::FieldRole, ParityBox);
+        gridLayout->addWidget(ParityBox, 4, 1, 1, 1);
 
-        label_7 = new QLabel(layoutWidget);
+        label_7 = new QLabel(centralWidget);
         label_7->setObjectName(QStringLiteral("label_7"));
 
-        formLayout->setWidget(6, QFormLayout::LabelRole, label_7);
+        gridLayout->addWidget(label_7, 5, 0, 1, 1);
 
-        StopBox = new QComboBox(layoutWidget);
+        StopBox = new QComboBox(centralWidget);
         StopBox->addItem(QString());
         StopBox->addItem(QString());
         StopBox->setObjectName(QStringLiteral("StopBox"));
 
-        formLayout->setWidget(6, QFormLayout::FieldRole, StopBox);
+        gridLayout->addWidget(StopBox, 5, 1, 1, 1);
 
-        clearButton = new QPushButton(layoutWidget);
+        clearButton = new QPushButton(centralWidget);
         clearButton->setObjectName(QStringLiteral("clearButton"));
 
-        formLayout->setWidget(7, QFormLayout::SpanningRole, clearButton);
+        gridLayout->addWidget(clearButton, 6, 0, 1, 2);
 
-        sendButton = new QPushButton(layoutWidget);
+        sendButton = new QPushButton(centralWidget);
         sendButton->setObjectName(QStringLiteral("sendButton"));
 
-        formLayout->setWidget(8, QFormLayout::SpanningRole, sendButton);
+        gridLayout->addWidget(sendButton, 7, 0, 1, 2);
 
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(20, 270, 66, 18));
-        formLayout_2 = new QFormLayout(widget);
-        formLayout_2->setSpacing(6);
-        formLayout_2->setContentsMargins(11, 11, 11, 11);
-        formLayout_2->setObjectName(QStringLiteral("formLayout_2"));
-        formLayout_2->setContentsMargins(0, 0, 0, 0);
-        radioButton = new QRadioButton(widget);
-        radioButton->setObjectName(QStringLiteral("radioButton"));
 
-        formLayout_2->setWidget(0, QFormLayout::LabelRole, radioButton);
+        gridLayout_2->addLayout(gridLayout, 0, 0, 2, 1);
 
-        radioButton_2 = new QRadioButton(widget);
-        radioButton_2->setObjectName(QStringLiteral("radioButton_2"));
+        gridLayout_3 = new QGridLayout();
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
 
-        formLayout_2->setWidget(0, QFormLayout::FieldRole, radioButton_2);
+        gridLayout_3->addWidget(label, 0, 0, 1, 1);
+
+        textEdit = new QTextEdit(centralWidget);
+        textEdit->setObjectName(QStringLiteral("textEdit"));
+
+        gridLayout_3->addWidget(textEdit, 1, 0, 1, 1);
+
+
+        gridLayout_2->addLayout(gridLayout_3, 0, 1, 1, 1);
+
+        formLayout = new QFormLayout();
+        formLayout->setSpacing(6);
+        formLayout->setObjectName(QStringLiteral("formLayout"));
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, label_2);
+
+        textEdit_2 = new QTextEdit(centralWidget);
+        textEdit_2->setObjectName(QStringLiteral("textEdit_2"));
+
+        formLayout->setWidget(1, QFormLayout::SpanningRole, textEdit_2);
+
+
+        gridLayout_2->addLayout(formLayout, 1, 1, 1, 1);
+
+
+        verticalLayout->addLayout(gridLayout_2);
 
         MainWindow->setCentralWidget(centralWidget);
 
@@ -185,10 +189,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
-        label->setText(QApplication::translate("MainWindow", "\346\216\245\346\224\266\347\252\227\345\217\243", nullptr));
-        label_2->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201\347\252\227\345\217\243", nullptr));
         openButton->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\344\270\262\345\217\243", nullptr));
-        pushButton->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260\344\270\262\345\217\243", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "\347\253\257\345\217\243\345\217\267\357\274\232", nullptr));
         label_4->setText(QApplication::translate("MainWindow", "\346\263\242\347\211\271\347\216\207\357\274\232", nullptr));
         BaudBox->setItemText(0, QApplication::translate("MainWindow", "1200", nullptr));
@@ -209,8 +210,8 @@ public:
 
         clearButton->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272\346\216\245\346\224\266", nullptr));
         sendButton->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201\346\225\260\346\215\256", nullptr));
-        radioButton->setText(QApplication::translate("MainWindow", "1", nullptr));
-        radioButton_2->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label->setText(QApplication::translate("MainWindow", "\346\216\245\346\224\266\347\252\227\345\217\243", nullptr));
+        label_2->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201\347\252\227\345\217\243", nullptr));
     } // retranslateUi
 
 };

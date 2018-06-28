@@ -18,11 +18,25 @@ MainWindow::MainWindow(QWidget *parent) :
             serial.close();
         }
     }
+
+    //循环检测串口定时器  This function will not
+    Timer_loop = new QTimer(this); //开启循环检测串时器
+    connect(Timer_loop, SIGNAL(timeout()), this, SLOT(Loop_search()));
+    Timer_loop->start(700);
+
     //设置波特率下拉菜单默认显示第三项
     ui->BaudBox->setCurrentIndex(3);
     //关闭发送按钮的使能
     ui->sendButton->setEnabled(false);
-    qDebug() << tr("界面设定成功！");
+
+}
+void MainWindow::Loop_search() //刷新串口显示函数
+{
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+    {
+        if( ui->PortBox->findText(info.portName()) == -1 ) //返回当前com口在下拉框内的索引，没有则返回 -1 并显示com口
+             ui->PortBox->addItem(info.portName());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -94,6 +108,7 @@ void MainWindow::on_openButton_clicked()
             serial->setFlowControl(QSerialPort::NoFlowControl);
 
             //关闭设置菜单使能
+            Timer_loop->stop(); //关闭循环检测串口定时器
             ui->PortBox->setEnabled(false);
             ui->BaudBox->setEnabled(false);
             ui->BitNumBox->setEnabled(false);
@@ -101,13 +116,14 @@ void MainWindow::on_openButton_clicked()
             ui->StopBox->setEnabled(false);
             ui->openButton->setText(tr("关闭串口"));
             ui->sendButton->setEnabled(true);
-            ui->pushButton->setEnabled(false);//刷新按钮不可用
 
             //连接信号槽
             QObject::connect(serial, &QSerialPort::readyRead, this, &MainWindow::Read_Data);
         }
         else
         {
+             ui->PortBox->clear();//清除combox内所有数据
+             Loop_search();
              QMessageBox::warning(this, tr("Warning"), tr("打开串口失败！"));
         }
     }
@@ -119,6 +135,7 @@ void MainWindow::on_openButton_clicked()
         serial->deleteLater();
 
         //恢复设置使能
+        Timer_loop->start(700); //开启循环检测串口定时器
         ui->PortBox->setEnabled(true);
         ui->BaudBox->setEnabled(true);
         ui->BitNumBox->setEnabled(true);
@@ -126,11 +143,11 @@ void MainWindow::on_openButton_clicked()
         ui->StopBox->setEnabled(true);
         ui->openButton->setText(tr("打开串口"));
         ui->sendButton->setEnabled(false);
-        ui->pushButton->setEnabled(true);//刷新按钮不可用
     }
 }
 
-void MainWindow::on_pushButton_clicked() //串口刷新按钮
+/*
+void MainWindow::showEvent(QShowEvent *event) //重写QComboBox事件
 {
     ui->PortBox->clear();//清除combox内所有数据
         foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
@@ -138,4 +155,7 @@ void MainWindow::on_pushButton_clicked() //串口刷新按钮
             if( ui->PortBox->findText(info.portName()) == -1 ) //返回当前com口在下拉框内的索引，没有则返回 -1 并显示com口
                  ui->PortBox->addItem(info.portName());
         }
+
+    QComboBox::showEvent(event);   //交给QComboBox显示
 }
+*/

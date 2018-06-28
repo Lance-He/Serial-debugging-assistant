@@ -7,6 +7,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
 
+#include <QTimer>
 namespace Ui {
 class MainWindow;
 }
@@ -31,12 +32,12 @@ private slots:
 
     void Read_Data();
 
-
-    void on_pushButton_clicked();
+    void Loop_search();
 
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
+    QTimer *Timer_loop;
 };
 
 #endif // MAINWINDOW_H
