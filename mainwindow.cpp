@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //查找可用的串口
     foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
     {
+        qDebug() << "Com Name: " << info.portName();
+        qDebug() << "Description : " << info.description();
+        qDebug() << "Manufacturer: " << info.manufacturer();
         QSerialPort serial;
         serial.setPort(info);
         if(serial.open(QIODevice::ReadWrite))
@@ -19,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
 
-    //循环检测串口定时器  This function will not
+    //循环检测串口定时器
     Timer_loop = new QTimer(this); //开启循环检测串时器
     connect(Timer_loop, SIGNAL(timeout()), this, SLOT(Loop_search()));
     Timer_loop->start(700);
@@ -30,10 +33,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->sendButton->setEnabled(false);
 
 }
-void MainWindow::Loop_search() //刷新串口显示函数
+void MainWindow::Loop_search() //刷新串口显示函数 //坑爹的玩意，改了好多种方法可算实现无需任何动作,串口热插拔可以自动识别出来
 {
-    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+    static int num=0;
+    if(ui->PortBox->count() != num) //判断系统检测到串口数量是否与ComboBox下拉列表数量不同
     {
+        ui->PortBox->clear();//检测到不同，清除combox内所有数据
+    }
+    num=0;
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) //循环检测串口
+    {
+        num++; //累加串口数量
         if( ui->PortBox->findText(info.portName()) == -1 ) //返回当前com口在下拉框内的索引，没有则返回 -1 并显示com口
              ui->PortBox->addItem(info.portName());
     }
@@ -122,8 +132,6 @@ void MainWindow::on_openButton_clicked()
         }
         else
         {
-             ui->PortBox->clear();//清除combox内所有数据
-             Loop_search();
              QMessageBox::warning(this, tr("Warning"), tr("打开串口失败！"));
         }
     }
@@ -145,17 +153,3 @@ void MainWindow::on_openButton_clicked()
         ui->sendButton->setEnabled(false);
     }
 }
-
-/*
-void MainWindow::showEvent(QShowEvent *event) //重写QComboBox事件
-{
-    ui->PortBox->clear();//清除combox内所有数据
-        foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
-        {
-            if( ui->PortBox->findText(info.portName()) == -1 ) //返回当前com口在下拉框内的索引，没有则返回 -1 并显示com口
-                 ui->PortBox->addItem(info.portName());
-        }
-
-    QComboBox::showEvent(event);   //交给QComboBox显示
-}
-*/
