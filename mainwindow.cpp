@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+     setMaximumSize(501, 359); //设置窗口固定大小
     //查找可用的串口
     foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
     {
@@ -25,10 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //循环检测串口定时器
     Timer_loop = new QTimer(this); //开启循环检测串时器
     connect(Timer_loop, SIGNAL(timeout()), this, SLOT(Loop_search()));
-    Timer_loop->start(700);
+    Timer_loop->start(200);
 
     //设置波特率下拉菜单默认显示第三项
-    ui->BaudBox->setCurrentIndex(3);
+    ui->BaudBox->setCurrentIndex(2);
     //关闭发送按钮的使能
     ui->sendButton->setEnabled(false);
 
@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::Loop_search() //刷新串口显示函数 //坑爹的玩意，改了好多种方法可算实现无需任何动作,串口热插拔可以自动识别出来
 {
     static int num=0;
+    static QString change_flag;
     if(ui->PortBox->count() != num) //判断系统检测到串口数量是否与ComboBox下拉列表数量不同
     {
         ui->PortBox->clear();//检测到不同，清除combox内所有数据
@@ -46,7 +47,20 @@ void MainWindow::Loop_search() //刷新串口显示函数 //坑爹的玩意，�
         num++; //累加串口数量
         if( ui->PortBox->findText(info.portName()) == -1 ) //返回当前com口在下拉框内的索引，没有则返回 -1 并显示com口
              ui->PortBox->addItem(info.portName());
+        if((info.portName() == ui->PortBox->currentText()) && (change_flag != ui->PortBox->currentText()))
+        {
+            ui->textBrowser->clear();
+            ui->textBrowser->append("Name："+info.portName());
+            ui->textBrowser->append("Description："+info.description());
+            ui->textBrowser->append("Manufacturer："+info.manufacturer());
+
+            change_flag=ui->PortBox->currentText();
+        }
     }
+    if(num == 0) //无串口数据时
+        ui->textBrowser->clear(); //清除串口信息内数据
+
+
 }
 
 MainWindow::~MainWindow()
@@ -98,22 +112,36 @@ void MainWindow::on_openButton_clicked()
             //设置数据位数
             switch(ui->BitNumBox->currentIndex())
             {
-            case 8: serial->setDataBits(QSerialPort::Data8); break;
-            default: break;
+                case 8: serial->setDataBits(QSerialPort::Data8); break;
+                case 7: serial->setDataBits(QSerialPort::Data7); break;
+                case 6: serial->setDataBits(QSerialPort::Data6); break;
+                case 5: serial->setDataBits(QSerialPort::Data5); break;
+                default: break;
             }
             //设置奇偶校验
-            switch(ui->ParityBox->currentIndex())
+            if(ui->ParityBox->currentText() == tr("无校验"))
+                serial->setParity(QSerialPort::NoParity);
+            else if(ui->ParityBox->currentText() == tr("偶校验"))
+                serial->setParity(QSerialPort::EvenParity);
+            else if(ui->ParityBox->currentText() == tr("奇校验"))
+                serial->setParity(QSerialPort::OddParity);
+            /*switch(ui->ParityBox->currentIndex())
             {
-            case 0: serial->setParity(QSerialPort::NoParity); break;
-            default: break;
+                case 0: serial->setParity(QSerialPort::NoParity); break;
+                default: break;
             }
+            */
+
             //设置停止位
             switch(ui->StopBox->currentIndex())
             {
-            case 1: serial->setStopBits(QSerialPort::OneStop); break;
-            case 2: serial->setStopBits(QSerialPort::TwoStop); break;
-            default: break;
+                case 1: serial->setStopBits(QSerialPort::OneStop); break;
+                case 2: serial->setStopBits(QSerialPort::TwoStop); break;
+                default: break;
             }
+            if(ui->StopBox->currentText() == tr("1.5"))
+                serial->setStopBits(QSerialPort::OneAndHalfStop);
+
             //设置流控制
             serial->setFlowControl(QSerialPort::NoFlowControl);
 
@@ -143,7 +171,7 @@ void MainWindow::on_openButton_clicked()
         serial->deleteLater();
 
         //恢复设置使能
-        Timer_loop->start(700); //开启循环检测串口定时器
+        Timer_loop->start(200); //开启循环检测串口定时器
         ui->PortBox->setEnabled(true);
         ui->BaudBox->setEnabled(true);
         ui->BitNumBox->setEnabled(true);
@@ -152,4 +180,16 @@ void MainWindow::on_openButton_clicked()
         ui->openButton->setText(tr("打开串口"));
         ui->sendButton->setEnabled(false);
     }
+}
+
+void sleep(unsigned int msec) //毫秒级延迟函数
+
+{
+
+QTime dieTime = QTime::currentTime().addMSecs(msec);
+
+while( QTime::currentTime() < dieTime )
+
+QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
 }
